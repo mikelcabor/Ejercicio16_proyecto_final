@@ -256,7 +256,7 @@
                 <Property name="text" type="java.lang.String" value="Precio"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtPrecio">
+            <Component class="javax.swing.JFormattedTextField" name="txtPrecio">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
               </Properties>
@@ -273,7 +273,19 @@
                 <Property name="text" type="java.lang.String" value="Fecha"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblFecha">
+            <Component class="javax.swing.JFormattedTextField" name="lblFecha">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format format="dd/MM/yy" subtype="-1" type="1"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lblFechaActionPerformed"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="ProductosLista_lblFecha"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

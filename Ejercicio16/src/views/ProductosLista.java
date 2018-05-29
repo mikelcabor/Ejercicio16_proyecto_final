@@ -6,10 +6,20 @@
 package views;
 
 
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+import java.awt.BorderLayout;
 import java.awt.Image;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import javax.swing.ImageIcon;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.text.DateFormatter;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import modelo.Categoria;
 import modelo.Producto;
 import modelo.Usuario;
@@ -21,6 +31,7 @@ import service.Service;
  */
 public class ProductosLista extends javax.swing.JFrame {    
     private Usuario usuario;    
+    private Categoria categoria;
     private Service services = new Service();
     
     private static final int CONSULTA = 0;
@@ -79,11 +90,11 @@ public class ProductosLista extends javax.swing.JFrame {
         lblEstado = new javax.swing.JLabel();
         slEstado = new javax.swing.JSlider();
         lblPrecio = new javax.swing.JLabel();
-        txtPrecio = new javax.swing.JTextField();
+        txtPrecio = new javax.swing.JFormattedTextField();
         lblVendedor = new javax.swing.JLabel();
         lblUsuario = new javax.swing.JLabel();
         lblFechaString = new javax.swing.JLabel();
-        lblFecha = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JFormattedTextField();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -231,6 +242,14 @@ public class ProductosLista extends javax.swing.JFrame {
 
         lblFechaString.setText("Fecha");
         pnlDatos.add(lblFechaString);
+
+        lblFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yy"))));
+        lblFecha.setToolTipText("");
+        lblFecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lblFechaActionPerformed(evt);
+            }
+        });
         pnlDatos.add(lblFecha);
 
         pnlContenido.add(pnlDatos, java.awt.BorderLayout.CENTER);
@@ -359,6 +378,10 @@ public class ProductosLista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxCategoriaActionPerformed
 
+    private void lblFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblFechaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblFechaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -367,6 +390,7 @@ public class ProductosLista extends javax.swing.JFrame {
         for(int i=0;i<services.getProductos().size();i++){
            if(services.getProductos().get(i).getIdUsuario()==usuario.getIdUsuario()){
                  cbxProducto.addItem(services.getProductos().get(i));
+                 
             }
         }
         for(int j=0;j<services.getCategorias().size();j++){           
@@ -386,13 +410,13 @@ public class ProductosLista extends javax.swing.JFrame {
         } else {
             Producto e = new Producto();   
             e.setIdProducto(services.getProductos().size()+1);
-            e.setIdCategoria(2);
+            e.setIdCategoria(cbxCategoria.getSelectedIndex());
             e.setIdUsuario(usuario.getIdUsuario());
             e.setNombre(txtNombre.getText());
             //e.setIdCategoria(txtCategoria.get);
             e.setDescripcion(txtDescripcion.getText());            
             e.setEstado(slEstado.getValue());
-            e.setFecha(null);            
+            e.setFecha((String) lblFecha.getValue());            
             e.setPrecio(Double.valueOf(txtPrecio.getText()));
             e.setFoto(lblImagen.getText());
             services.nuevoProducto(e);
@@ -401,18 +425,33 @@ public class ProductosLista extends javax.swing.JFrame {
         }
     }
     
+   
    private void mostrarProducto(Producto p) {
         txtNombre.setText(String.valueOf(p.getNombre()));        
         txtDescripcion.setText(String.valueOf(p.getDescripcion()));
-        
+        cbxCategoria.setSelectedItem(services.getCategoria(p.getIdCategoria()));
         slEstado.setValue(p.getEstado());
-        txtPrecio.setText(String.valueOf(p.getPrecio() + " €"));
-        lblUsuario.setText(String.valueOf(services.getUsuario(p.getIdUsuario())));
-        if(p.getFecha()==null){
-            lblFecha.setText("No se ha vendido todavia");
-        }else{
-            lblFecha.setText(String.valueOf(p.getFecha()));
-        }
+        NumberFormat dispFormat = NumberFormat.getCurrencyInstance();
+        // Formato de edición: inglés (separador decimal: el punto)
+        NumberFormat editFormat = NumberFormat.getNumberInstance(Locale.ENGLISH);
+        // Para la edición, no queremos separadores de millares
+        editFormat.setGroupingUsed(false);
+        // Creamos los formateadores de números
+        NumberFormatter dnFormat = new NumberFormatter(dispFormat);
+        NumberFormatter enFormat = new NumberFormatter(editFormat);
+        // Creamos la factoría de formateadores especificando los
+        // formateadores por defecto, de visualización y de edición
+        DefaultFormatterFactory currFactory = new DefaultFormatterFactory(dnFormat, dnFormat, enFormat);
+        // El formateador de edición admite caracteres incorrectos
+        enFormat.setAllowsInvalid(true);
+        // Asignamos la factoría al campo
+        txtPrecio.setFormatterFactory(currFactory);
+        txtPrecio.setValue(p.getPrecio());
+        lblUsuario.setText(String.valueOf(services.getUsuario(p.getIdUsuario())));   
+        
+        lblFecha.setText(p.getFecha());
+        
+        
         ImageIcon imIc = new ImageIcon("images/productos/" + p.getFoto());
         Image imag = imIc.getImage();
         double max = Math.max(imIc.getIconWidth(), imIc.getIconHeight());
@@ -511,7 +550,7 @@ public class ProductosLista extends javax.swing.JFrame {
     private javax.swing.JLabel lblCategoria;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblEstado;
-    private javax.swing.JLabel lblFecha;
+    private javax.swing.JFormattedTextField lblFecha;
     private javax.swing.JLabel lblFechaString;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JLabel lblNombre;
@@ -527,7 +566,7 @@ public class ProductosLista extends javax.swing.JFrame {
     private javax.swing.JSlider slEstado;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtPrecio;
+    private javax.swing.JFormattedTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
 
     private void modificarProducto() {
@@ -540,14 +579,14 @@ public class ProductosLista extends javax.swing.JFrame {
         } else {
             Producto e = (Producto) cbxProducto.getSelectedItem();
             e.setIdProducto(e.getIdProducto());
-            e.setIdCategoria(cbxCategoria.getSelectedIndex());
-            e.setIdUsuario(usuario.getIdUsuario());
+            e.setIdCategoria(cbxCategoria.getSelectedIndex()+1);
+            e.setIdUsuario(e.getIdUsuario());
             e.setNombre(txtNombre.getText());
             //e.setIdCategoria(txtCategoria.get);
             e.setDescripcion(txtDescripcion.getText());            
             e.setEstado(slEstado.getValue());
-            e.setFecha(null);            
-            e.setPrecio(0);
+            e.setFecha(e.getFecha());            
+            e.setPrecio((double) txtPrecio.getValue());
             e.setFoto("1p.jpg");
             services.modificarProducto(e);
             JOptionPane.showMessageDialog(this, "Evento guardado correctamente");

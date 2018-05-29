@@ -88,10 +88,10 @@ public class CrearTablas {
                     + "precio number(7,2),"
                     + "foto varchar2(120))");
 
-            stmt.executeUpdate("Insert into Productos_16 Values(1,1,1,'Escoba',3,'La escoba es una herramienta que consta de un palo o vara al que se fijan en el extremo fibras duras y se utiliza para trapear o limpiar el suelo.',null,9.10,'1p.jpg')");
-            stmt.executeUpdate("Insert into Productos_16 Values(2,2,3,'Cacahuete',1,'es una legumbre de la familia de las Fabaceae (fabáceas) cuyos frutos se consideran frutos secos',null,2.99,'2p.jpg')");
+            stmt.executeUpdate("Insert into Productos_16 Values(1,1,1,'Escoba',3,'La escoba es una herramienta que consta de un palo o vara al que se fijan en el extremo fibras duras y se utiliza para trapear o limpiar el suelo.','08/06/2015',9.10,'1p.jpg')");
+            stmt.executeUpdate("Insert into Productos_16 Values(2,2,3,'Cacahuete',1,'es una legumbre de la familia de las Fabaceae (fabáceas) cuyos frutos se consideran frutos secos','06/04/2014',2.99,'2p.jpg')");
             stmt.executeUpdate("Insert into Productos_16 Values(3,3,2,'Camiseta',4,'Prenda interior que cubre el tronco, generalmente sin cuello.','04/04/2018',19.99,'3p.jpg')");
-            stmt.executeUpdate("Insert into Productos_16 Values(4,4,2,'Destornillador',5,'Herramienta para atornillar o destornillar que consiste generalmente en una barra metálica sujeta a un mango y terminada en un extremo que se adapta a la cabeza del tornillo.',null,7.99,'4p.jpg')");
+            stmt.executeUpdate("Insert into Productos_16 Values(4,4,2,'Destornillador',5,'Herramienta para atornillar o destornillar que consiste generalmente en una barra metálica sujeta a un mango y terminada en un extremo que se adapta a la cabeza del tornillo.','08/09/2007',7.99,'4p.jpg')");
            
             
             stmt.executeUpdate("Create table Pedidos_16("                    

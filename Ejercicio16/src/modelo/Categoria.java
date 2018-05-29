@@ -51,5 +51,30 @@ public class Categoria {
     public String toString() {
         return nombre;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Categoria other = (Categoria) obj;
+        if (this.idCategoria != other.idCategoria) {
+            return false;
+        }
+        return true;
+    }
+    
 }  
     
