@@ -234,6 +234,7 @@ public class ProductosLista extends javax.swing.JFrame {
         pnlDatos.add(lblPrecio);
 
         txtPrecio.setEditable(false);
+        txtPrecio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         pnlDatos.add(txtPrecio);
 
         lblVendedor.setText("Vendedor");
@@ -243,7 +244,7 @@ public class ProductosLista extends javax.swing.JFrame {
         lblFechaString.setText("Fecha");
         pnlDatos.add(lblFechaString);
 
-        lblFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yy"))));
+        lblFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         lblFecha.setToolTipText("");
         lblFecha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -416,8 +417,8 @@ public class ProductosLista extends javax.swing.JFrame {
             //e.setIdCategoria(txtCategoria.get);
             e.setDescripcion(txtDescripcion.getText());            
             e.setEstado(slEstado.getValue());
-            e.setFecha((String) lblFecha.getValue());            
-            e.setPrecio(Double.valueOf(txtPrecio.getText()));
+            e.setFecha(lblFecha.getText());            
+            e.setPrecio((double) txtPrecio.getValue());
             e.setFoto(lblImagen.getText());
             services.nuevoProducto(e);
             JOptionPane.showMessageDialog(this, "Evento guardado correctamente");
@@ -431,7 +432,7 @@ public class ProductosLista extends javax.swing.JFrame {
         txtDescripcion.setText(String.valueOf(p.getDescripcion()));
         cbxCategoria.setSelectedItem(services.getCategoria(p.getIdCategoria()));
         slEstado.setValue(p.getEstado());
-        NumberFormat dispFormat = NumberFormat.getCurrencyInstance();
+        /*NumberFormat dispFormat = NumberFormat.getCurrencyInstance();
         // Formato de edición: inglés (separador decimal: el punto)
         NumberFormat editFormat = NumberFormat.getNumberInstance(Locale.ENGLISH);
         // Para la edición, no queremos separadores de millares
@@ -445,7 +446,7 @@ public class ProductosLista extends javax.swing.JFrame {
         // El formateador de edición admite caracteres incorrectos
         enFormat.setAllowsInvalid(true);
         // Asignamos la factoría al campo
-        txtPrecio.setFormatterFactory(currFactory);
+        txtPrecio.setFormatterFactory(currFactory);*/
         txtPrecio.setValue(p.getPrecio());
         lblUsuario.setText(String.valueOf(services.getUsuario(p.getIdUsuario())));   
         
@@ -585,8 +586,8 @@ public class ProductosLista extends javax.swing.JFrame {
             //e.setIdCategoria(txtCategoria.get);
             e.setDescripcion(txtDescripcion.getText());            
             e.setEstado(slEstado.getValue());
-            e.setFecha(e.getFecha());            
-            e.setPrecio((double) txtPrecio.getValue());
+            e.setFecha((String) lblFecha.getValue());            
+            e.setPrecio((double)((long) txtPrecio.getValue()));
             e.setFoto("1p.jpg");
             services.modificarProducto(e);
             JOptionPane.showMessageDialog(this, "Evento guardado correctamente");

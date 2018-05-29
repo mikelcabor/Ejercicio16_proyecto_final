@@ -129,7 +129,8 @@ public class ProductoBD implements ProductoDAO{
 
     @Override
     public List<Producto> getProductoCategoria(int idCategoria) {
-        Producto p = null;
+        List<Producto> productos = new ArrayList<>();
+        Producto p;
         PreparedStatement pst;
         ResultSet rst;
         
@@ -139,13 +140,14 @@ public class ProductoBD implements ProductoDAO{
             rst = pst.executeQuery();
             if(rst.next()){
                 p = leerProducto(rst);
+                productos.add(p);
             }
             pst.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         /*No hasta que punto esto esta bien !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-        return (List<Producto>) p;
+        return productos;
     }
     
     
@@ -169,7 +171,7 @@ public class ProductoBD implements ProductoDAO{
 
     @Override
     public List<Producto> getProductoUsuario(int idUsuario) {
-        Producto p = null;
+        List<Producto> productos = new ArrayList<>();
         PreparedStatement pst;
         ResultSet rst;
         
@@ -178,13 +180,14 @@ public class ProductoBD implements ProductoDAO{
             pst.setInt(1, idUsuario);
             rst = pst.executeQuery();
             if(rst.next()){
-                p = leerProducto(rst);
+                Producto p = leerProducto(rst);
+                productos.add(p);
             }
             pst.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductoBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         /*No hasta que punto esto esta bien !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-        return (List<Producto>) p;
+        return  productos;
     }
 }

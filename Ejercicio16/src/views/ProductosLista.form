@@ -259,6 +259,9 @@
             <Component class="javax.swing.JFormattedTextField" name="txtPrecio">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format subtype="0" type="4"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblVendedor">
@@ -276,7 +279,7 @@
             <Component class="javax.swing.JFormattedTextField" name="lblFecha">
               <Properties>
                 <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format format="dd/MM/yy" subtype="-1" type="1"/>
+                  <Format format="dd/MM/yyyy" subtype="-1" type="1"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>

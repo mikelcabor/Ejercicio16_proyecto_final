@@ -26,6 +26,8 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        txtUsuario.setText("ana");
+        txtContraseña.setText("12345");
 
     }
 
@@ -191,6 +193,7 @@ public class Login extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
+
             }
         });
     }

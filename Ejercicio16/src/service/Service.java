@@ -61,7 +61,10 @@ public class Service {
     public Producto getProducto(int idProducto){
         return productoDAO.getProducto(idProducto);
     }
-    
+    public List<Producto> getProductoCategoria(int idCategoria){
+        return productoDAO.getProductoCategoria(idCategoria);
+        
+    }
     
     
     public boolean nuevoProducto(Producto p){

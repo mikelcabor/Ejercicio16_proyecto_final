@@ -5,9 +5,20 @@
  */
 package views;
 
+import java.awt.Component;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTree;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreePath;
+import modelo.Categoria;
+import modelo.Producto;
 import modelo.Usuario;
+import service.Service;
 
 /**
  *
@@ -15,12 +26,18 @@ import modelo.Usuario;
  */
 public class VerProductosCategoria extends javax.swing.JFrame {
     private Usuario usuario;
+    private Categoria categoria;
+    private Service services = new Service();
+     private DefaultMutableTreeNode trRaiz;
     /**
      * Creates new form VerProductosCategoria
      */
     public VerProductosCategoria(Usuario usuario) {
         this.usuario = usuario;
+        crearArbolCategorias();
+        //cargarProductosCategoria(services.getCategoria(2));
         initComponents();
+        jTree.setCellRenderer(new CategoriasRenderer());
     }
 
     /**
@@ -39,7 +56,7 @@ public class VerProductosCategoria extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         pnlTabla = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblProductos = new javax.swing.JTable();
         pnlArbol = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree = new javax.swing.JTree();
@@ -65,7 +82,7 @@ public class VerProductosCategoria extends javax.swing.JFrame {
 
         pnlTabla.setLayout(new java.awt.BorderLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -84,7 +101,7 @@ public class VerProductosCategoria extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tblProductos);
 
         pnlTabla.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
@@ -92,6 +109,11 @@ public class VerProductosCategoria extends javax.swing.JFrame {
 
         pnlArbol.setLayout(new java.awt.BorderLayout());
 
+        jTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                seleccionCategoria(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTree);
 
         pnlArbol.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -118,7 +140,46 @@ public class VerProductosCategoria extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void seleccionCategoria(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_seleccionCategoria
+       TreePath path = evt.getPath();
+        if (path.getPathCount() == 2) {
+            DefaultMutableTreeNode treCategoria = (DefaultMutableTreeNode) path.getLastPathComponent();
+            //DefaultMutableTreeNode dmt = (DefaultMutableTreeNode) path.getPathComponent(2);
+            Categoria c = (Categoria) treCategoria.getUserObject();
+            cargarProductosCategoria(c);
+        }
+       
+    }//GEN-LAST:event_seleccionCategoria
     
+    
+    private void crearArbolCategorias() {
+        trRaiz = new DefaultMutableTreeNode("Categorias");
+        for (Categoria c : services.getCategorias()) {
+            DefaultMutableTreeNode trCat = new DefaultMutableTreeNode(c);    
+            trRaiz.add(trCat);
+        }                
+    } 
+    
+    private void mostrarTabla(Categoria c){
+        
+    }
+    
+     private void cargarProductosCategoria(Categoria c) {
+        String[] titulos = {"Nombre", "Email","asd","asda","asdas","asdas"};
+        List<Producto> productos = services.getProductoCategoria(c.getIdCategoria());
+        String[][] datos = new String[productos.size()][6] ;
+        for(int i=0; i<productos.size(); i++){
+            datos[i][0] = productos.get(i).getNombre();
+            datos[i][1] = String.valueOf(productos.get(i).getIdUsuario());
+            datos[i][2] = String.valueOf(productos.get(i).getPrecio());
+            datos[i][3] = String.valueOf(productos.get(i).getEstado());
+            datos[i][4] = String.valueOf(productos.get(i).getFecha());
+            datos[i][5] = String.valueOf(productos.get(i).getFoto());
+        }
+        DefaultTableModel modelo = new DefaultTableModel(datos, titulos);
+        tblProductos.setModel(modelo);
+    }
     /**
      * @param args the command line arguments
      */
@@ -130,7 +191,6 @@ public class VerProductosCategoria extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTree jTree;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel pnlArbol;
@@ -138,5 +198,35 @@ public class VerProductosCategoria extends javax.swing.JFrame {
     private javax.swing.JPanel pnlContenido;
     private javax.swing.JPanel pnlTabla;
     private javax.swing.JPanel pnlTitulo;
+    private javax.swing.JTable tblProductos;
     // End of variables declaration//GEN-END:variables
+    
+    
+    class CategoriasRenderer implements TreeCellRenderer{
+
+        @Override
+        public Component getTreeCellRendererComponent(
+                JTree tree, 
+                Object value, 
+                boolean selected, 
+                boolean expanded, 
+                boolean leaf, 
+                int row, 
+                boolean hasFocus) {
+            JLabel lbl = new JLabel();
+            DefaultMutableTreeNode nodo = (DefaultMutableTreeNode) value;
+            if (row == 0){
+                lbl.setText("Categoria");
+                 
+            } else {
+                lbl.setText(nodo.getUserObject().toString());      
+                
+            }
+            
+            return lbl;
+        }
+        
+    }
+    
+    
 }
