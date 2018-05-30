@@ -13,8 +13,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import jiconfont.icons.FontAwesome;
+import jiconfont.swing.IconFontSwing;
 import modelo.Categoria;
 import modelo.Producto;
 import modelo.Usuario;
@@ -33,10 +37,10 @@ public class VerProductosCategoria extends javax.swing.JFrame {
      * Creates new form VerProductosCategoria
      */
     public VerProductosCategoria(Usuario usuario) {
-        this.usuario = usuario;
-        crearArbolCategorias();
+        this.usuario = usuario;        
         //cargarProductosCategoria(services.getCategoria(2));
         initComponents();
+        crearArbolCategorias();
         jTree.setCellRenderer(new CategoriasRenderer());
     }
 
@@ -109,6 +113,7 @@ public class VerProductosCategoria extends javax.swing.JFrame {
 
         pnlArbol.setLayout(new java.awt.BorderLayout());
 
+        jTree.setModel(null);
         jTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 seleccionCategoria(evt);
@@ -158,7 +163,9 @@ public class VerProductosCategoria extends javax.swing.JFrame {
         for (Categoria c : services.getCategorias()) {
             DefaultMutableTreeNode trCat = new DefaultMutableTreeNode(c);    
             trRaiz.add(trCat);
-        }                
+        }       
+        TreeModel model = new DefaultTreeModel(trRaiz);
+        jTree.setModel(model);
     } 
     
     private void mostrarTabla(Categoria c){
@@ -166,7 +173,7 @@ public class VerProductosCategoria extends javax.swing.JFrame {
     }
     
      private void cargarProductosCategoria(Categoria c) {
-        String[] titulos = {"Nombre", "Email","asd","asda","asdas","asdas"};
+        String[] titulos = {"Nombre", "Vendedor","Precio","Estado","Fecha","Foto"};
         List<Producto> productos = services.getProductoCategoria(c.getIdCategoria());
         String[][] datos = new String[productos.size()][6] ;
         for(int i=0; i<productos.size(); i++){
@@ -216,11 +223,11 @@ public class VerProductosCategoria extends javax.swing.JFrame {
             JLabel lbl = new JLabel();
             DefaultMutableTreeNode nodo = (DefaultMutableTreeNode) value;
             if (row == 0){
-                lbl.setText("Categoria");
+                lbl.setText("Categoria");                
                  
             } else {
-                lbl.setText(nodo.getUserObject().toString());      
-                
+                lbl.setText(nodo.getUserObject().toString());  
+               
             }
             
             return lbl;

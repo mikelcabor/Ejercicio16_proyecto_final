@@ -9,14 +9,26 @@ package views;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import java.awt.BorderLayout;
 import java.awt.Image;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
@@ -33,6 +45,7 @@ public class ProductosLista extends javax.swing.JFrame {
     private Usuario usuario;    
     private Categoria categoria;
     private Service services = new Service();
+    private File f;
     
     private static final int CONSULTA = 0;
     private static final int MODIFICAR = 1;
@@ -51,6 +64,7 @@ public class ProductosLista extends javax.swing.JFrame {
         initComponents();
         cargarDatos();
         estadoActual=CONSULTA;
+        
     }
 
     /**
@@ -61,6 +75,7 @@ public class ProductosLista extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         pnlTitulo = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
@@ -106,6 +121,20 @@ public class ProductosLista extends javax.swing.JFrame {
         btnBuscar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         lblImagen = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        menuConsulta = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        miModificar = new javax.swing.JMenuItem();
+        miAceptarModificar = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        miAlta = new javax.swing.JMenuItem();
+        miAceptarAlta = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        miSiguiente = new javax.swing.JMenuItem();
+        miAnterior = new javax.swing.JMenuItem();
+        miUltimo = new javax.swing.JMenuItem();
+        miPrimero = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -186,16 +215,28 @@ public class ProductosLista extends javax.swing.JFrame {
         pnlContenido.setLayout(new java.awt.BorderLayout());
 
         pnlDatos.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 10, 20, 20));
-        pnlDatos.setLayout(new java.awt.GridLayout(7, 2, -80, 0));
+        pnlDatos.setLayout(new java.awt.GridBagLayout());
 
         lblNombre.setText("Producto");
-        pnlDatos.add(lblNombre);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        pnlDatos.add(lblNombre, gridBagConstraints);
 
         txtNombre.setEditable(false);
-        pnlDatos.add(txtNombre);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        gridBagConstraints.weightx = 0.6;
+        pnlDatos.add(txtNombre, gridBagConstraints);
 
         lblCategoria.setText("Categoria");
-        pnlDatos.add(lblCategoria);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        pnlDatos.add(lblCategoria, gridBagConstraints);
 
         cbxCategoria.setEnabled(false);
         cbxCategoria.addActionListener(new java.awt.event.ActionListener() {
@@ -203,10 +244,20 @@ public class ProductosLista extends javax.swing.JFrame {
                 cbxCategoriaActionPerformed(evt);
             }
         });
-        pnlDatos.add(cbxCategoria);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        gridBagConstraints.weightx = 0.5;
+        pnlDatos.add(cbxCategoria, gridBagConstraints);
 
         lblDescripcion.setText("Descripcion");
-        pnlDatos.add(lblDescripcion);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        pnlDatos.add(lblDescripcion, gridBagConstraints);
 
         jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -221,28 +272,70 @@ public class ProductosLista extends javax.swing.JFrame {
 
         jPanel6.add(jScrollPane2);
 
-        pnlDatos.add(jPanel6);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipady = 12;
+        gridBagConstraints.weightx = 0.8;
+        gridBagConstraints.weighty = 0.6;
+        pnlDatos.add(jPanel6, gridBagConstraints);
 
         lblEstado.setText("Estado");
-        pnlDatos.add(lblEstado);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        pnlDatos.add(lblEstado, gridBagConstraints);
 
+        slEstado.setMajorTickSpacing(1);
         slEstado.setMaximum(5);
+        slEstado.setMinimum(1);
+        slEstado.setMinorTickSpacing(1);
+        slEstado.setPaintLabels(true);
+        slEstado.setPaintTicks(true);
         slEstado.setEnabled(false);
-        pnlDatos.add(slEstado);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.8;
+        pnlDatos.add(slEstado, gridBagConstraints);
 
         lblPrecio.setText("Precio");
-        pnlDatos.add(lblPrecio);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        pnlDatos.add(lblPrecio, gridBagConstraints);
 
         txtPrecio.setEditable(false);
         txtPrecio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        pnlDatos.add(txtPrecio);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        gridBagConstraints.weightx = 0.8;
+        pnlDatos.add(txtPrecio, gridBagConstraints);
 
         lblVendedor.setText("Vendedor");
-        pnlDatos.add(lblVendedor);
-        pnlDatos.add(lblUsuario);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        pnlDatos.add(lblVendedor, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        gridBagConstraints.weightx = 0.8;
+        pnlDatos.add(lblUsuario, gridBagConstraints);
 
         lblFechaString.setText("Fecha");
-        pnlDatos.add(lblFechaString);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        pnlDatos.add(lblFechaString, gridBagConstraints);
 
         lblFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         lblFecha.setToolTipText("");
@@ -251,7 +344,13 @@ public class ProductosLista extends javax.swing.JFrame {
                 lblFechaActionPerformed(evt);
             }
         });
-        pnlDatos.add(lblFecha);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 12;
+        gridBagConstraints.ipady = 12;
+        gridBagConstraints.weightx = 0.8;
+        pnlDatos.add(lblFecha, gridBagConstraints);
 
         pnlContenido.add(pnlDatos, java.awt.BorderLayout.CENTER);
 
@@ -304,6 +403,12 @@ public class ProductosLista extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
         lblImagen.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        lblImagen.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblImagen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblImagenMouseClicked(evt);
+            }
+        });
         jPanel1.add(lblImagen);
 
         jPanel4.add(jPanel1, java.awt.BorderLayout.SOUTH);
@@ -312,7 +417,96 @@ public class ProductosLista extends javax.swing.JFrame {
 
         getContentPane().add(pnlContenido, java.awt.BorderLayout.CENTER);
 
-        setSize(new java.awt.Dimension(663, 468));
+        menuConsulta.setText("Consulta");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Bucar");
+        menuConsulta.add(jMenuItem1);
+
+        jMenuBar1.add(menuConsulta);
+
+        jMenu3.setText("Modificar");
+
+        miModificar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_MASK));
+        miModificar.setText("Modificar");
+        miModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miModificarActionPerformed(evt);
+            }
+        });
+        jMenu3.add(miModificar);
+
+        miAceptarModificar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
+        miAceptarModificar.setText("Aceptar");
+        miAceptarModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAceptarModificarActionPerformed(evt);
+            }
+        });
+        jMenu3.add(miAceptarModificar);
+
+        jMenuBar1.add(jMenu3);
+
+        jMenu1.setText("Alta");
+
+        miAlta.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_MASK));
+        miAlta.setText("Alta");
+        jMenu1.add(miAlta);
+
+        miAceptarAlta.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
+        miAceptarAlta.setText("Aceptar");
+        miAceptarAlta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAceptarAltaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miAceptarAlta);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Mover");
+
+        miSiguiente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, 0));
+        miSiguiente.setText("Siguiente");
+        miSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSiguienteActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miSiguiente);
+
+        miAnterior.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, 0));
+        miAnterior.setText("Anterior");
+        miAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAnteriorActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miAnterior);
+
+        miUltimo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.InputEvent.CTRL_MASK));
+        miUltimo.setText("Ultimo");
+        miUltimo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miUltimoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miUltimo);
+
+        miPrimero.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, java.awt.event.InputEvent.CTRL_MASK));
+        miPrimero.setText("Primero");
+        miPrimero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miPrimeroActionPerformed(evt);
+            }
+        });
+        jMenu2.add(miPrimero);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        setSize(new java.awt.Dimension(679, 549));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -333,7 +527,8 @@ public class ProductosLista extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        mostrarProducto((Producto) cbxProducto.getSelectedItem());
+        mostrarProducto((Producto) cbxProducto.getSelectedItem());        
+        pos=cbxProducto.getSelectedIndex();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultaActionPerformed
@@ -357,14 +552,21 @@ public class ProductosLista extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
-        mostrarProducto((Producto) cbxProducto.getItemAt(pos+1));
+        if(pos<cbxProducto.getItemCount()-1){
+        mostrarProducto((Producto) cbxProducto.getItemAt(pos+1));        
         pos++;
+        cbxProducto.setSelectedItem(pos);
+        }else{
+        }
                 
     }//GEN-LAST:event_btnSiguienteActionPerformed
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
-        mostrarProducto((Producto) cbxProducto.getItemAt(pos-1));
-        pos--;        
+        if(pos>0){
+        mostrarProducto((Producto) cbxProducto.getItemAt(pos-1));        
+        pos--; 
+        cbxProducto.setSelectedItem(cbxProducto.getItemAt(pos));
+        }       
     }//GEN-LAST:event_btnAnteriorActionPerformed
 
     private void btnPrimeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrimeroActionPerformed
@@ -382,6 +584,100 @@ public class ProductosLista extends javax.swing.JFrame {
     private void lblFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblFechaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_lblFechaActionPerformed
+
+    private void lblImagenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblImagenMouseClicked
+        JFileChooser jfc = new JFileChooser();
+        jfc.setMultiSelectionEnabled(false);
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileFilter filter = new FileNameExtensionFilter("JPEG (*.jpeg,*.jpg)", "jpg", "jpeg");
+        jfc.addChoosableFileFilter(filter);
+        filter = new FileNameExtensionFilter("PNG (*.png)", "png");
+        jfc.addChoosableFileFilter(filter);
+        filter = new FileNameExtensionFilter("GIF (*.gif)", "gif");
+        jfc.addChoosableFileFilter(filter);
+        filter = new FileNameExtensionFilter("Todas las imágenes", "gif","png","jpg","jpeg","bmp");
+        jfc.addChoosableFileFilter(filter);
+        jfc.setAcceptAllFileFilterUsed(false);
+        if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            f = jfc.getSelectedFile();
+            File fd = new File("images/eventos", f.getName());
+            try {
+                BufferedInputStream bis = new BufferedInputStream(
+                        new FileInputStream(f));
+                BufferedOutputStream bos = new BufferedOutputStream(
+                        new FileOutputStream(fd));
+                int c;
+                while ((c = bis.read()) != -1) {
+                    bos.write(c);
+                }
+                bos.flush();
+                bos.close();
+                bis.close();
+                ImageIcon imIc = new ImageIcon(f.getName());
+                Image imag = imIc.getImage();
+                /*imag = imag.getScaledInstance(
+
+                imIc.getIconWidth()/4, 
+                imIc.getIconHeight()/4, Image.SCALE_SMOOTH);
+                imag = imag.getScaledInstance(
+                120, 
+                120, Image.SCALE_SMOOTH);*/
+                int max = Math.max(imIc.getIconWidth(), imIc.getIconHeight());
+                double fe = 250 / max;
+                imag = imag.getScaledInstance(
+                        (int) (imIc.getIconWidth() * fe),
+                        (int) (imIc.getIconHeight() * fe), Image.SCALE_SMOOTH);
+                imIc.setImage(imag);
+                lblImagen.setIcon(imIc);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ProductosLista.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ProductosLista.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_lblImagenMouseClicked
+
+    private void miModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miModificarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_miModificarActionPerformed
+
+    private void miAceptarModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAceptarModificarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_miAceptarModificarActionPerformed
+
+    private void miAceptarAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAceptarAltaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_miAceptarAltaActionPerformed
+
+    private void miUltimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miUltimoActionPerformed
+        
+        mostrarProducto(cbxProducto.getItemAt(cbxProducto.getItemCount()-1));
+        pos=cbxProducto.getItemCount()-1;
+        cbxProducto.setSelectedItem(pos);
+    }//GEN-LAST:event_miUltimoActionPerformed
+
+    private void miSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSiguienteActionPerformed
+        if(pos<cbxProducto.getItemCount()-1){
+        mostrarProducto((Producto) cbxProducto.getItemAt(pos+1));        
+        pos++;
+        cbxProducto.setSelectedItem(pos);
+        }else{
+        }
+    }//GEN-LAST:event_miSiguienteActionPerformed
+
+    private void miAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAnteriorActionPerformed
+        if(pos>0){
+        mostrarProducto((Producto) cbxProducto.getItemAt(pos-1));        
+        pos--; 
+        cbxProducto.setSelectedItem(pos);
+        }
+    }//GEN-LAST:event_miAnteriorActionPerformed
+
+    private void miPrimeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miPrimeroActionPerformed
+        mostrarProducto(cbxProducto.getItemAt(0));
+        pos=0;
+        cbxProducto.setSelectedItem(pos);
+    }//GEN-LAST:event_miPrimeroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -418,8 +714,8 @@ public class ProductosLista extends javax.swing.JFrame {
             e.setDescripcion(txtDescripcion.getText());            
             e.setEstado(slEstado.getValue());
             e.setFecha(lblFecha.getText());            
-            e.setPrecio((double) txtPrecio.getValue());
-            e.setFoto(lblImagen.getText());
+            e.setPrecio(Double.valueOf(String.valueOf(txtPrecio.getValue())));
+            e.setFoto(String.valueOf(lblImagen.getIcon()));
             services.nuevoProducto(e);
             JOptionPane.showMessageDialog(this, "Evento guardado correctamente");
             
@@ -428,7 +724,8 @@ public class ProductosLista extends javax.swing.JFrame {
     
    
    private void mostrarProducto(Producto p) {
-        txtNombre.setText(String.valueOf(p.getNombre()));        
+       cbxProducto.setSelectedItem(p);
+       txtNombre.setText(String.valueOf(p.getNombre()));        
         txtDescripcion.setText(String.valueOf(p.getDescripcion()));
         cbxCategoria.setSelectedItem(services.getCategoria(p.getIdCategoria()));
         slEstado.setValue(p.getEstado());
@@ -452,7 +749,7 @@ public class ProductosLista extends javax.swing.JFrame {
         
         lblFecha.setText(p.getFecha());
         
-        
+        ImageIcon defecto = new ImageIcon("images/productos/defecto.jpg");
         ImageIcon imIc = new ImageIcon("images/productos/" + p.getFoto());
         Image imag = imIc.getImage();
         double max = Math.max(imIc.getIconWidth(), imIc.getIconHeight());
@@ -461,7 +758,13 @@ public class ProductosLista extends javax.swing.JFrame {
                         (int) (imIc.getIconWidth() * fe),
                         (int) (imIc.getIconHeight() * fe), Image.SCALE_SMOOTH);
                 imIc.setImage(imag);
-        lblImagen.setIcon(imIc);
+                defecto.setImage(imag);
+                
+        if(lblImagen.getIcon()==null){
+            lblImagen.setIcon(defecto);
+        }else{
+            lblImagen.setIcon(imIc);
+        }
        
     }
    private void consultar(){
@@ -539,6 +842,11 @@ public class ProductosLista extends javax.swing.JFrame {
     private javax.swing.JComboBox<Producto> cbxProducto;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -560,6 +868,15 @@ public class ProductosLista extends javax.swing.JFrame {
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblVendedor;
+    private javax.swing.JMenu menuConsulta;
+    private javax.swing.JMenuItem miAceptarAlta;
+    private javax.swing.JMenuItem miAceptarModificar;
+    private javax.swing.JMenuItem miAlta;
+    private javax.swing.JMenuItem miAnterior;
+    private javax.swing.JMenuItem miModificar;
+    private javax.swing.JMenuItem miPrimero;
+    private javax.swing.JMenuItem miSiguiente;
+    private javax.swing.JMenuItem miUltimo;
     private javax.swing.JPanel pnlBotones;
     private javax.swing.JPanel pnlContenido;
     private javax.swing.JPanel pnlDatos;
@@ -587,8 +904,8 @@ public class ProductosLista extends javax.swing.JFrame {
             e.setDescripcion(txtDescripcion.getText());            
             e.setEstado(slEstado.getValue());
             e.setFecha((String) lblFecha.getValue());            
-            e.setPrecio((double)((long) txtPrecio.getValue()));
-            e.setFoto("1p.jpg");
+            e.setPrecio(Double.valueOf(String.valueOf(txtPrecio.getValue())));
+            e.setFoto(String.valueOf(lblImagen.getIcon()));
             services.modificarProducto(e);
             JOptionPane.showMessageDialog(this, "Evento guardado correctamente");
             
