@@ -28,7 +28,6 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         txtUsuario.setText("ana");
         txtContraseña.setText("12345");
-
     }
 
     /**

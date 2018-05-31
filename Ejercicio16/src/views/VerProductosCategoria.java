@@ -20,6 +20,7 @@ import javax.swing.tree.TreePath;
 import jiconfont.icons.FontAwesome;
 import jiconfont.swing.IconFontSwing;
 import modelo.Categoria;
+import modelo.Pedido;
 import modelo.Producto;
 import modelo.Usuario;
 import service.Service;
@@ -70,6 +71,11 @@ public class VerProductosCategoria extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnComprar.setText("Comprar");
+        btnComprar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComprarActionPerformed(evt);
+            }
+        });
         pnlBotones.add(btnComprar);
 
         btnCancelar.setText("Cancelar");
@@ -156,7 +162,29 @@ public class VerProductosCategoria extends javax.swing.JFrame {
         }
        
     }//GEN-LAST:event_seleccionCategoria
+
+    private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
+        comprarProducto();
+    }//GEN-LAST:event_btnComprarActionPerformed
     
+    private void comprarProducto(){
+        
+           /* Pedido e = new Producto();   
+            e.setIdPedido(services.getProductos().size()+1);
+            e.setIdUsuario(tblProductos.getColumn(0).get);
+            e.setIdUsuario(usuario.getIdUsuario());
+            e.setNombre(txtNombre.getText());
+            //e.setIdCategoria(txtCategoria.get);
+            e.setDescripcion(txtDescripcion.getText());            
+            e.setEstado(slEstado.getValue());
+            e.setFecha(lblFecha.getText());            
+            e.setPrecio(Double.valueOf(String.valueOf(txtPrecio.getValue())));
+            e.setFoto(String.valueOf(lblImagen.getIcon()));
+            services.nuevoProducto(e);
+            JOptionPane.showMessageDialog(this, "Evento guardado correctamente");
+            */
+        
+    }
     
     private void crearArbolCategorias() {
         trRaiz = new DefaultMutableTreeNode("Categorias");
@@ -168,16 +196,14 @@ public class VerProductosCategoria extends javax.swing.JFrame {
         jTree.setModel(model);
     } 
     
-    private void mostrarTabla(Categoria c){
-        
-    }
+    
     
      private void cargarProductosCategoria(Categoria c) {
         String[] titulos = {"Nombre", "Vendedor","Precio","Estado","Fecha","Foto"};
         List<Producto> productos = services.getProductoCategoria(c.getIdCategoria());
-        String[][] datos = new String[productos.size()][6] ;
+        Object[][] datos = new Object[productos.size()][6] ;
         for(int i=0; i<productos.size(); i++){
-            datos[i][0] = productos.get(i).getNombre();
+            datos[i][0] = productos.get(i);
             datos[i][1] = String.valueOf(productos.get(i).getIdUsuario());
             datos[i][2] = String.valueOf(productos.get(i).getPrecio());
             datos[i][3] = String.valueOf(productos.get(i).getEstado());

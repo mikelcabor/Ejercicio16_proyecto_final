@@ -7,12 +7,15 @@ package service;
 
 import dao.CategoriaBD;
 import dao.CategoriaDAO;
+import dao.PedidoBD;
+import dao.PedidoDAO;
 import dao.ProductoBD;
 import dao.ProductoDAO;
 import dao.UsuarioBD;
 import dao.UsuarioDAO;
 import java.util.List;
 import modelo.Categoria;
+import modelo.Pedido;
 import modelo.Producto;
 import modelo.Usuario;
 import util.SHA;
@@ -25,6 +28,7 @@ public class Service {
     private UsuarioDAO usuarioDAO = new UsuarioBD();
     private CategoriaDAO categoriaDAO = new CategoriaBD();
     private ProductoDAO productoDAO = new ProductoBD();
+    private PedidoDAO pedidoDAO = new PedidoBD();
     
     public List<Usuario> getUsuarios(){
         return usuarioDAO.getUsuarios();
@@ -116,6 +120,20 @@ public class Service {
     
     public void modificarCategoria(Categoria c){
         categoriaDAO.modificarCategoria(c);
+    }
+    
+    public boolean nuevoPedido(Pedido p){
+        List<Pedido> pedidos = pedidoDAO.getPedidos();
+        int i;
+        for(i=0; i<pedidos.size() && 
+            p.getIdPedido()==
+                pedidos.get(i).getIdPedido();i++);
+        if (i==pedidos.size()){
+            pedidoDAO.nuevoPedido(p);
+            return true;
+        } else {
+            return false;
+        }
     }
     
     

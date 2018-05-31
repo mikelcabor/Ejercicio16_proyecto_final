@@ -122,19 +122,18 @@ public class ProductosLista extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lblImagen = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        menuConsulta = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        miModificar = new javax.swing.JMenuItem();
+        jmEstado = new javax.swing.JMenu();
+        jmConsulta = new javax.swing.JMenu();
+        miBuscar = new javax.swing.JMenuItem();
+        jmModificar = new javax.swing.JMenu();
         miAceptarModificar = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        miAlta = new javax.swing.JMenuItem();
+        jmAlta = new javax.swing.JMenu();
         miAceptarAlta = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jmMover = new javax.swing.JMenu();
         miSiguiente = new javax.swing.JMenuItem();
         miAnterior = new javax.swing.JMenuItem();
-        miUltimo = new javax.swing.JMenuItem();
         miPrimero = new javax.swing.JMenuItem();
+        miUltimo = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -221,6 +220,7 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.ipady = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         pnlDatos.add(lblNombre, gridBagConstraints);
 
         txtNombre.setEditable(false);
@@ -236,6 +236,7 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.ipady = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         pnlDatos.add(lblCategoria, gridBagConstraints);
 
         cbxCategoria.setEnabled(false);
@@ -257,6 +258,7 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.ipady = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         pnlDatos.add(lblDescripcion, gridBagConstraints);
 
         jPanel6.setLayout(new javax.swing.BoxLayout(jPanel6, javax.swing.BoxLayout.LINE_AXIS));
@@ -285,6 +287,7 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.ipady = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         pnlDatos.add(lblEstado, gridBagConstraints);
 
         slEstado.setMajorTickSpacing(1);
@@ -305,6 +308,7 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.ipady = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         pnlDatos.add(lblPrecio, gridBagConstraints);
 
         txtPrecio.setEditable(false);
@@ -322,11 +326,13 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.ipady = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         pnlDatos.add(lblVendedor, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 5;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.ipady = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 0.8;
         pnlDatos.add(lblUsuario, gridBagConstraints);
 
@@ -335,6 +341,7 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.ipadx = 12;
         gridBagConstraints.ipady = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         pnlDatos.add(lblFechaString, gridBagConstraints);
 
         lblFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
@@ -417,24 +424,37 @@ public class ProductosLista extends javax.swing.JFrame {
 
         getContentPane().add(pnlContenido, java.awt.BorderLayout.CENTER);
 
-        menuConsulta.setText("Consulta");
+        jmEstado.setText("Estados");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Bucar");
-        menuConsulta.add(jMenuItem1);
-
-        jMenuBar1.add(menuConsulta);
-
-        jMenu3.setText("Modificar");
-
-        miModificar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_MASK));
-        miModificar.setText("Modificar");
-        miModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miModificarActionPerformed(evt);
+        jmConsulta.setText("Consulta");
+        jmConsulta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jmConsultaMouseClicked(evt);
             }
         });
-        jMenu3.add(miModificar);
+        jmConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmConsultaActionPerformed(evt);
+            }
+        });
+
+        miBuscar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
+        miBuscar.setText("Bucar");
+        jmConsulta.add(miBuscar);
+
+        jmEstado.add(jmConsulta);
+
+        jmModificar.setText("Modificar");
+        jmModificar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jmModificarMouseClicked(evt);
+            }
+        });
+        jmModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmModificarActionPerformed(evt);
+            }
+        });
 
         miAceptarModificar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
         miAceptarModificar.setText("Aceptar");
@@ -443,15 +463,21 @@ public class ProductosLista extends javax.swing.JFrame {
                 miAceptarModificarActionPerformed(evt);
             }
         });
-        jMenu3.add(miAceptarModificar);
+        jmModificar.add(miAceptarModificar);
 
-        jMenuBar1.add(jMenu3);
+        jmEstado.add(jmModificar);
 
-        jMenu1.setText("Alta");
-
-        miAlta.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_MASK));
-        miAlta.setText("Alta");
-        jMenu1.add(miAlta);
+        jmAlta.setText("Alta");
+        jmAlta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jmAltaMouseClicked(evt);
+            }
+        });
+        jmAlta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmAltaActionPerformed(evt);
+            }
+        });
 
         miAceptarAlta.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
         miAceptarAlta.setText("Aceptar");
@@ -460,11 +486,18 @@ public class ProductosLista extends javax.swing.JFrame {
                 miAceptarAltaActionPerformed(evt);
             }
         });
-        jMenu1.add(miAceptarAlta);
+        jmAlta.add(miAceptarAlta);
 
-        jMenuBar1.add(jMenu1);
+        jmEstado.add(jmAlta);
 
-        jMenu2.setText("Mover");
+        jMenuBar1.add(jmEstado);
+
+        jmMover.setText("Mover");
+        jmMover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmMoverActionPerformed(evt);
+            }
+        });
 
         miSiguiente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, 0));
         miSiguiente.setText("Siguiente");
@@ -473,7 +506,7 @@ public class ProductosLista extends javax.swing.JFrame {
                 miSiguienteActionPerformed(evt);
             }
         });
-        jMenu2.add(miSiguiente);
+        jmMover.add(miSiguiente);
 
         miAnterior.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, 0));
         miAnterior.setText("Anterior");
@@ -482,16 +515,7 @@ public class ProductosLista extends javax.swing.JFrame {
                 miAnteriorActionPerformed(evt);
             }
         });
-        jMenu2.add(miAnterior);
-
-        miUltimo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.InputEvent.CTRL_MASK));
-        miUltimo.setText("Ultimo");
-        miUltimo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miUltimoActionPerformed(evt);
-            }
-        });
-        jMenu2.add(miUltimo);
+        jmMover.add(miAnterior);
 
         miPrimero.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, java.awt.event.InputEvent.CTRL_MASK));
         miPrimero.setText("Primero");
@@ -500,9 +524,18 @@ public class ProductosLista extends javax.swing.JFrame {
                 miPrimeroActionPerformed(evt);
             }
         });
-        jMenu2.add(miPrimero);
+        jmMover.add(miPrimero);
 
-        jMenuBar1.add(jMenu2);
+        miUltimo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.InputEvent.CTRL_MASK));
+        miUltimo.setText("Ultimo");
+        miUltimo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miUltimoActionPerformed(evt);
+            }
+        });
+        jmMover.add(miUltimo);
+
+        jMenuBar1.add(jmMover);
 
         setJMenuBar(jMenuBar1);
 
@@ -637,16 +670,20 @@ public class ProductosLista extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_lblImagenMouseClicked
 
-    private void miModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miModificarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_miModificarActionPerformed
-
     private void miAceptarModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAceptarModificarActionPerformed
-        // TODO add your handling code here:
+        if(estadoActual==ALTA){
+        añadirProducto();
+        }else if(estadoActual==MODIFICAR){
+            modificarProducto();
+        }
     }//GEN-LAST:event_miAceptarModificarActionPerformed
 
     private void miAceptarAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAceptarAltaActionPerformed
-        // TODO add your handling code here:
+        if(estadoActual==ALTA){
+        añadirProducto();
+        }else if(estadoActual==MODIFICAR){
+            modificarProducto();
+        }
     }//GEN-LAST:event_miAceptarAltaActionPerformed
 
     private void miUltimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miUltimoActionPerformed
@@ -678,6 +715,34 @@ public class ProductosLista extends javax.swing.JFrame {
         pos=0;
         cbxProducto.setSelectedItem(pos);
     }//GEN-LAST:event_miPrimeroActionPerformed
+
+    private void jmMoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmMoverActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jmMoverActionPerformed
+
+    private void jmAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmAltaActionPerformed
+        
+    }//GEN-LAST:event_jmAltaActionPerformed
+
+    private void jmModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmModificarActionPerformed
+       
+    }//GEN-LAST:event_jmModificarActionPerformed
+
+    private void jmConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmConsultaActionPerformed
+        
+    }//GEN-LAST:event_jmConsultaActionPerformed
+
+    private void jmConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmConsultaMouseClicked
+        cambiarEstados(CONSULTA);
+    }//GEN-LAST:event_jmConsultaMouseClicked
+
+    private void jmModificarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmModificarMouseClicked
+        cambiarEstados(MODIFICAR);
+    }//GEN-LAST:event_jmModificarMouseClicked
+
+    private void jmAltaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmAltaMouseClicked
+        cambiarEstados(ALTA);
+    }//GEN-LAST:event_jmAltaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -842,11 +907,7 @@ public class ProductosLista extends javax.swing.JFrame {
     private javax.swing.JComboBox<Producto> cbxProducto;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -856,6 +917,11 @@ public class ProductosLista extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JMenu jmAlta;
+    private javax.swing.JMenu jmConsulta;
+    private javax.swing.JMenu jmEstado;
+    private javax.swing.JMenu jmModificar;
+    private javax.swing.JMenu jmMover;
     private javax.swing.JLabel lblCategoria;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblEstado;
@@ -868,12 +934,10 @@ public class ProductosLista extends javax.swing.JFrame {
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblVendedor;
-    private javax.swing.JMenu menuConsulta;
     private javax.swing.JMenuItem miAceptarAlta;
     private javax.swing.JMenuItem miAceptarModificar;
-    private javax.swing.JMenuItem miAlta;
     private javax.swing.JMenuItem miAnterior;
-    private javax.swing.JMenuItem miModificar;
+    private javax.swing.JMenuItem miBuscar;
     private javax.swing.JMenuItem miPrimero;
     private javax.swing.JMenuItem miSiguiente;
     private javax.swing.JMenuItem miUltimo;
