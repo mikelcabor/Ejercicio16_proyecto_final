@@ -9,12 +9,12 @@
             <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/dao/PedidoBD.java</file>
             <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/views/ProductosLista.java</file>
             <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/views/Productoscomprados.java</file>
-            <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/dao/ProductoDAO.java</file>
             <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/dao/CategoriaBD.java</file>
             <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/util/CrearTablas.java</file>
             <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/modelo/Pedido.java</file>
-            <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/dao/PedidoDAO.java</file>
+            <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/modelo/Producto.java</file>
             <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/views/Login.java</file>
+            <file>file:/D:/GitHub/Ejercicio16/Ejercicio16/src/modelo/Usuario.java</file>
         </group>
     </open-files>
 </project-private>

@@ -60,10 +60,11 @@ public class ProductosLista extends javax.swing.JFrame {
      */
     public ProductosLista(Usuario usuario) {
         
-        this.usuario = usuario;  
+        this.usuario = usuario; 
+        
         initComponents();
         cargarDatos();
-        estadoActual=CONSULTA;
+        
         
     }
 
@@ -110,6 +111,7 @@ public class ProductosLista extends javax.swing.JFrame {
         lblUsuario = new javax.swing.JLabel();
         lblFechaString = new javax.swing.JLabel();
         lblFecha = new javax.swing.JFormattedTextField();
+        btnEliminar = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -344,7 +346,7 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         pnlDatos.add(lblFechaString, gridBagConstraints);
 
-        lblFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
+        lblFecha.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("d/MM/yyyy"))));
         lblFecha.setToolTipText("");
         lblFecha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -358,6 +360,18 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.ipady = 12;
         gridBagConstraints.weightx = 0.8;
         pnlDatos.add(lblFecha, gridBagConstraints);
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        pnlDatos.add(btnEliminar, gridBagConstraints);
 
         pnlContenido.add(pnlDatos, java.awt.BorderLayout.CENTER);
 
@@ -619,6 +633,7 @@ public class ProductosLista extends javax.swing.JFrame {
     }//GEN-LAST:event_lblFechaActionPerformed
 
     private void lblImagenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblImagenMouseClicked
+        if(estadoActual==ALTA || estadoActual==MODIFICAR){
         JFileChooser jfc = new JFileChooser();
         jfc.setMultiSelectionEnabled(false);
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -633,12 +648,13 @@ public class ProductosLista extends javax.swing.JFrame {
         jfc.setAcceptAllFileFilterUsed(false);
         if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             f = jfc.getSelectedFile();
-            File fd = new File("images/eventos", f.getName());
+            File fd = new File("images/productos", f.getName());
             try {
                 BufferedInputStream bis = new BufferedInputStream(
                         new FileInputStream(f));
                 BufferedOutputStream bos = new BufferedOutputStream(
                         new FileOutputStream(fd));
+                if(!f.equals(fd)){
                 int c;
                 while ((c = bis.read()) != -1) {
                     bos.write(c);
@@ -662,11 +678,13 @@ public class ProductosLista extends javax.swing.JFrame {
                         (int) (imIc.getIconHeight() * fe), Image.SCALE_SMOOTH);
                 imIc.setImage(imag);
                 lblImagen.setIcon(imIc);
+                }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ProductosLista.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(ProductosLista.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
         }
     }//GEN-LAST:event_lblImagenMouseClicked
 
@@ -744,6 +762,13 @@ public class ProductosLista extends javax.swing.JFrame {
         cambiarEstados(ALTA);
     }//GEN-LAST:event_jmAltaMouseClicked
 
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        if (JOptionPane.showConfirmDialog(this, "¿Quieres eliminar el producto?","eliminar producto",JOptionPane.YES_NO_OPTION)
+                == JOptionPane.YES_OPTION){
+            eliminarProducto();
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -758,8 +783,23 @@ public class ProductosLista extends javax.swing.JFrame {
         for(int j=0;j<services.getCategorias().size();j++){           
                  cbxCategoria.addItem(services.getCategorias().get(j));            
         }
-        
+        if(cbxProducto.getItemCount()!=0){
         mostrarProducto((Producto) cbxProducto.getSelectedItem());
+        }else{
+            cambiarEstados(ALTA);
+        }
+    }
+    
+    private void eliminarProducto(){
+        Producto p = new Producto();
+        p = (Producto) cbxProducto.getSelectedItem();
+        
+        services.eliminarProducto(p);
+        if(cbxProducto.getItemCount()!=0){
+        mostrarProducto(cbxProducto.getItemAt(cbxProducto.getSelectedIndex()+1));
+        }else{
+            cambiarEstados(ALTA);
+        }
     }
     
     private void añadirProducto(){
@@ -771,14 +811,20 @@ public class ProductosLista extends javax.swing.JFrame {
             txtNombre.requestFocus();
         } else {
             Producto e = new Producto();   
-            e.setIdProducto(services.getProductos().size()+1);
+            int i=0;
+            for(Producto p : services.getProductos()){                
+                if(p.getIdProducto()>i){
+                    e.setIdProducto(p.getIdProducto()+1);
+                }
+                i = p.getIdProducto();
+            }
             e.setIdCategoria(cbxCategoria.getSelectedIndex());
             e.setIdUsuario(usuario.getIdUsuario());
             e.setNombre(txtNombre.getText());
             //e.setIdCategoria(txtCategoria.get);
             e.setDescripcion(txtDescripcion.getText());            
             e.setEstado(slEstado.getValue());
-            e.setFecha(lblFecha.getText());            
+            e.setFecha((Date) lblFecha.getValue());            
             e.setPrecio(Double.valueOf(String.valueOf(txtPrecio.getValue())));
             e.setFoto(String.valueOf(lblImagen.getIcon()));
             services.nuevoProducto(e);
@@ -789,8 +835,9 @@ public class ProductosLista extends javax.swing.JFrame {
     
    
    private void mostrarProducto(Producto p) {
-       cbxProducto.setSelectedItem(p);
-       txtNombre.setText(String.valueOf(p.getNombre()));        
+       
+        cbxProducto.setSelectedItem(p);
+        txtNombre.setText(String.valueOf(p.getNombre()));        
         txtDescripcion.setText(String.valueOf(p.getDescripcion()));
         cbxCategoria.setSelectedItem(services.getCategoria(p.getIdCategoria()));
         slEstado.setValue(p.getEstado());
@@ -812,7 +859,7 @@ public class ProductosLista extends javax.swing.JFrame {
         txtPrecio.setValue(p.getPrecio());
         lblUsuario.setText(String.valueOf(services.getUsuario(p.getIdUsuario())));   
         
-        lblFecha.setText(p.getFecha());
+        lblFecha.setValue(p.getFecha());
         
         ImageIcon defecto = new ImageIcon("images/productos/defecto.jpg");
         ImageIcon imIc = new ImageIcon("images/productos/" + p.getFoto());
@@ -823,13 +870,10 @@ public class ProductosLista extends javax.swing.JFrame {
                         (int) (imIc.getIconWidth() * fe),
                         (int) (imIc.getIconHeight() * fe), Image.SCALE_SMOOTH);
                 imIc.setImage(imag);
-                defecto.setImage(imag);
-                
-        if(lblImagen.getIcon()==null){
-            lblImagen.setIcon(defecto);
-        }else{
-            lblImagen.setIcon(imIc);
-        }
+                defecto.setImage(imag);                        
+            lblImagen.setIcon(imIc);        
+        cambiarEstados(CONSULTA);
+       
        
     }
    private void consultar(){
@@ -841,6 +885,14 @@ public class ProductosLista extends javax.swing.JFrame {
        btnBuscar.setEnabled(true);
        cbxCategoria.setEnabled(false);
        slEstado.setEnabled(false);
+       miBuscar.setEnabled(true);
+       miAceptarAlta.setEnabled(false);
+       miAceptarModificar.setEnabled(false);
+       miAnterior.setEnabled(true);
+       miSiguiente.setEnabled(true);
+       miPrimero.setEnabled(true);
+       miUltimo.setEnabled(true);
+       btnEliminar.setEnabled(false);
    }
    
    private void modificar(){
@@ -852,6 +904,19 @@ public class ProductosLista extends javax.swing.JFrame {
        cbxProducto.setEnabled(false);
        btnBuscar.setEnabled(true);
         slEstado.setEnabled(true);
+        miBuscar.setEnabled(false);
+       miAceptarAlta.setEnabled(true);
+       miAceptarModificar.setEnabled(true);
+       miAnterior.setEnabled(false);
+       miSiguiente.setEnabled(false);
+       miPrimero.setEnabled(false);
+       miUltimo.setEnabled(false);
+       btnPrimero.setEnabled(false);
+       btnAnterior.setEnabled(false);
+       btnSiguiente.setEnabled(false);
+       btnUltimo.setEnabled(false);
+       btnEliminar.setEnabled(true);
+       
    }
    private void alta(){
        JOptionPane.showMessageDialog(this, "Alta","Alta",JOptionPane.INFORMATION_MESSAGE);
@@ -859,10 +924,14 @@ public class ProductosLista extends javax.swing.JFrame {
        cbxProducto.setEnabled(false);
        txtNombre.setText("");        
         txtDescripcion.setText("");
+        ImageIcon defecto = new ImageIcon("images/productos/defecto.jpg");
+        lblImagen.setIcon(defecto);
         slEstado.setValue(0);
         txtPrecio.setText("");    
         btnBuscar.setEnabled(false);
-        cbxCategoria.setEnabled(true);
+        cbxCategoria.setEnabled(true);      
+       miAceptarModificar.setEnabled(false);
+       btnEliminar.setEnabled(false);
         /*slEstado.setValueIsAdjusting(true);*/
         
    }
@@ -898,6 +967,7 @@ public class ProductosLista extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConsulta;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnPrimero;
     private javax.swing.JButton btnSalir;
@@ -967,8 +1037,9 @@ public class ProductosLista extends javax.swing.JFrame {
             //e.setIdCategoria(txtCategoria.get);
             e.setDescripcion(txtDescripcion.getText());            
             e.setEstado(slEstado.getValue());
-            e.setFecha((String) lblFecha.getValue());            
+            e.setFecha((Date) lblFecha.getValue());            
             e.setPrecio(Double.valueOf(String.valueOf(txtPrecio.getValue())));
+            
             e.setFoto(String.valueOf(lblImagen.getIcon()));
             services.modificarProducto(e);
             JOptionPane.showMessageDialog(this, "Evento guardado correctamente");

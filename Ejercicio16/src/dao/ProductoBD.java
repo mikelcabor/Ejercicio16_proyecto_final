@@ -5,6 +5,7 @@
  */
 package dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -78,7 +79,7 @@ public class ProductoBD implements ProductoDAO{
             String hash = SHA.getSHA(password, salto);
             */
             pst.setString(6, p.getDescripcion());
-            pst.setString(7,p.getFecha());
+            pst.setDate(7, (Date) p.getFecha());
             pst.setDouble(8,p.getPrecio());
             pst.setString(9,p.getFoto());
             pst.executeUpdate();
@@ -116,7 +117,7 @@ public class ProductoBD implements ProductoDAO{
             String hash = SHA.getSHA(password, salto);
             */
             pst.setString(5, p.getDescripcion());
-            pst.setString(6,p.getFecha());
+            pst.setDate(6, new java.sql.Date(p.getFecha().getTime()));
             pst.setDouble(7,p.getPrecio());
             pst.setString(8,p.getFoto());
             pst.setInt(9, p.getIdProducto());
@@ -160,6 +161,7 @@ public class ProductoBD implements ProductoDAO{
              u.setNombre(rst.getString("nombre"));
              u.setEstado(rst.getInt("estado"));
              u.setDescripcion(rst.getString("descripcion"));
+             u.setFecha(rst.getDate("fechaVenta"));
              u.setPrecio(rst.getInt("precio"));
              u.setFoto(rst.getString("foto"));
              

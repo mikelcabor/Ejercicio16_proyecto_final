@@ -5,6 +5,8 @@
  */
 package modelo;
 
+import java.util.Date;
+
 /**
  *
  * @author daw1
@@ -16,14 +18,14 @@ public class Producto {
     String nombre;
     int estado;
     String descripcion;
-    String fecha;
+    Date fecha;
     double precio;
     String foto;
 
     public Producto() {
     }
 
-    public Producto(int idProducto, int idCategoria, int idUsuario, String nombre, int estado, String descripcion, String fecha, double precio, String foto) {
+    public Producto(int idProducto, int idCategoria, int idUsuario, String nombre, int estado, String descripcion, Date fecha, double precio, String foto) {
         this.idProducto = idProducto;
         this.idCategoria = idCategoria;
         this.idUsuario = idUsuario;
@@ -83,11 +85,11 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
