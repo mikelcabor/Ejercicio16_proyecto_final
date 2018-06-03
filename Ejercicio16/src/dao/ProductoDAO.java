@@ -20,4 +20,5 @@ public interface ProductoDAO {
     void modificarProducto(Producto p);
     List<Producto> getProductoCategoria(int idCategoria);
     List<Producto> getProductoUsuario(int idUsuario);
+    
 }

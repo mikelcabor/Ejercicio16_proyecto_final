@@ -18,5 +18,6 @@ public interface PedidoDAO {
     void nuevoPedido(Pedido p);
     void eliminarPedido(Pedido p);
     void modificarPedido(Pedido p);
+    List<Pedido> getProductoPedido(int idProducto);
     
 }

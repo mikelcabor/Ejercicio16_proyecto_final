@@ -35,7 +35,6 @@ public class Principal extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         pnlIzquierda = new javax.swing.JPanel();
         lblBanner = new javax.swing.JLabel();
@@ -69,7 +68,7 @@ public class Principal extends javax.swing.JFrame {
 
         getContentPane().add(pnlSalir, java.awt.BorderLayout.PAGE_END);
 
-        pnlTitulo.setLayout(new java.awt.GridLayout());
+        pnlTitulo.setLayout(new java.awt.GridLayout(1, 0));
         pnlTitulo.add(filler2);
 
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -106,9 +105,16 @@ public class Principal extends javax.swing.JFrame {
         pnlContenido.add(btnProductosVentas);
 
         btnProductosCompras.setText("Productos comprados");
+        btnProductosCompras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductosComprasActionPerformed(evt);
+            }
+        });
         pnlContenido.add(btnProductosCompras);
 
         getContentPane().add(pnlContenido, java.awt.BorderLayout.CENTER);
+
+        getAccessibleContext().setAccessibleName("Principal");
 
         setSize(new java.awt.Dimension(668, 371));
         setLocationRelativeTo(null);
@@ -139,6 +145,11 @@ public class Principal extends javax.swing.JFrame {
         new ProductosLista(usuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnMisProductosActionPerformed
+
+    private void btnProductosComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosComprasActionPerformed
+        new ProductosComprados(usuario).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnProductosComprasActionPerformed
 
     /**
      * @param args the command line arguments

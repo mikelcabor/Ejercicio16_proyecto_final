@@ -6,8 +6,6 @@
 package views;
 
 
-import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
-import java.awt.BorderLayout;
 import java.awt.Image;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,22 +14,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
 import modelo.Categoria;
 import modelo.Producto;
 import modelo.Usuario;
@@ -43,7 +33,7 @@ import service.Service;
  */
 public class ProductosLista extends javax.swing.JFrame {    
     private Usuario usuario;    
-    private Categoria categoria;
+
     private Service services = new Service();
     private File f;
     
@@ -64,7 +54,7 @@ public class ProductosLista extends javax.swing.JFrame {
         
         initComponents();
         cargarDatos();
-        
+        cambiarEstados(CONSULTA);
         
     }
 
@@ -304,6 +294,7 @@ public class ProductosLista extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.8;
         pnlDatos.add(slEstado, gridBagConstraints);
+        slEstado.getAccessibleContext().setAccessibleName("Productos");
 
         lblPrecio.setText("Precio");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -648,7 +639,7 @@ public class ProductosLista extends javax.swing.JFrame {
         jfc.setAcceptAllFileFilterUsed(false);
         if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             f = jfc.getSelectedFile();
-            File fd = new File("images/productos", f.getName());
+            File fd = new File(f.getName());
             try {
                 BufferedInputStream bis = new BufferedInputStream(
                         new FileInputStream(f));
@@ -664,13 +655,7 @@ public class ProductosLista extends javax.swing.JFrame {
                 bis.close();
                 ImageIcon imIc = new ImageIcon(f.getName());
                 Image imag = imIc.getImage();
-                /*imag = imag.getScaledInstance(
-
-                imIc.getIconWidth()/4, 
-                imIc.getIconHeight()/4, Image.SCALE_SMOOTH);
-                imag = imag.getScaledInstance(
-                120, 
-                120, Image.SCALE_SMOOTH);*/
+               
                 int max = Math.max(imIc.getIconWidth(), imIc.getIconHeight());
                 double fe = 250 / max;
                 imag = imag.getScaledInstance(
@@ -811,13 +796,14 @@ public class ProductosLista extends javax.swing.JFrame {
             txtNombre.requestFocus();
         } else {
             Producto e = new Producto();   
-            int i=0;
+            int max = 0;
             for(Producto p : services.getProductos()){                
-                if(p.getIdProducto()>i){
-                    e.setIdProducto(p.getIdProducto()+1);
-                }
-                i = p.getIdProducto();
+                if(max<p.getIdProducto())
+			{                            
+                            max=p.getIdProducto();
+			}
             }
+            e.setIdProducto(max+1);
             e.setIdCategoria(cbxCategoria.getSelectedIndex());
             e.setIdUsuario(usuario.getIdUsuario());
             e.setNombre(txtNombre.getText());
@@ -841,21 +827,7 @@ public class ProductosLista extends javax.swing.JFrame {
         txtDescripcion.setText(String.valueOf(p.getDescripcion()));
         cbxCategoria.setSelectedItem(services.getCategoria(p.getIdCategoria()));
         slEstado.setValue(p.getEstado());
-        /*NumberFormat dispFormat = NumberFormat.getCurrencyInstance();
-        // Formato de edición: inglés (separador decimal: el punto)
-        NumberFormat editFormat = NumberFormat.getNumberInstance(Locale.ENGLISH);
-        // Para la edición, no queremos separadores de millares
-        editFormat.setGroupingUsed(false);
-        // Creamos los formateadores de números
-        NumberFormatter dnFormat = new NumberFormatter(dispFormat);
-        NumberFormatter enFormat = new NumberFormatter(editFormat);
-        // Creamos la factoría de formateadores especificando los
-        // formateadores por defecto, de visualización y de edición
-        DefaultFormatterFactory currFactory = new DefaultFormatterFactory(dnFormat, dnFormat, enFormat);
-        // El formateador de edición admite caracteres incorrectos
-        enFormat.setAllowsInvalid(true);
-        // Asignamos la factoría al campo
-        txtPrecio.setFormatterFactory(currFactory);*/
+       
         txtPrecio.setValue(p.getPrecio());
         lblUsuario.setText(String.valueOf(services.getUsuario(p.getIdUsuario())));   
         
@@ -872,7 +844,7 @@ public class ProductosLista extends javax.swing.JFrame {
                 imIc.setImage(imag);
                 defecto.setImage(imag);                        
             lblImagen.setIcon(imIc);        
-        cambiarEstados(CONSULTA);
+        
        
        
     }
@@ -896,7 +868,7 @@ public class ProductosLista extends javax.swing.JFrame {
    }
    
    private void modificar(){
-       JOptionPane.showMessageDialog(this, "Modificar","modificar",JOptionPane.INFORMATION_MESSAGE);
+      
        cbxCategoria.setEnabled(true);
        txtDescripcion.setEditable(true);
        txtNombre.setEditable(true);
@@ -916,10 +888,10 @@ public class ProductosLista extends javax.swing.JFrame {
        btnSiguiente.setEnabled(false);
        btnUltimo.setEnabled(false);
        btnEliminar.setEnabled(true);
+       btnBuscar.setEnabled(false);
        
    }
    private void alta(){
-       JOptionPane.showMessageDialog(this, "Alta","Alta",JOptionPane.INFORMATION_MESSAGE);
        modificar();
        cbxProducto.setEnabled(false);
        txtNombre.setText("");        
@@ -932,6 +904,7 @@ public class ProductosLista extends javax.swing.JFrame {
         cbxCategoria.setEnabled(true);      
        miAceptarModificar.setEnabled(false);
        btnEliminar.setEnabled(false);
+       btnBuscar.setEnabled(false);
         /*slEstado.setValueIsAdjusting(true);*/
         
    }
@@ -945,6 +918,7 @@ public class ProductosLista extends javax.swing.JFrame {
                estado=ALTA;                              
            }else{
                 modificar();
+                JOptionPane.showMessageDialog(this, "Modificar","modificar",JOptionPane.INFORMATION_MESSAGE);  
                estadoActual=MODIFICAR;
            }                      
        }else if (estado==ALTA){            
@@ -952,7 +926,7 @@ public class ProductosLista extends javax.swing.JFrame {
           estadoActual=ALTA;
        }else if(estado==CONSULTA){           
            consultar();
-           JOptionPane.showMessageDialog(this, "Consulta","Consulta",JOptionPane.INFORMATION_MESSAGE);  
+           
            estadoActual=CONSULTA;
        }         
        

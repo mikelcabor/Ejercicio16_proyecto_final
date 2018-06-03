@@ -24,6 +24,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        /*Pongo esto para que sea mas facil entrar y salir, utiliza el usuario que quieras*/
         txtUsuario.setText("ana");
         txtContraseña.setText("12345");
     }

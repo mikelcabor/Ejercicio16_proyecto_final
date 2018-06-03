@@ -19,6 +19,7 @@ import util.SHA;
 /**
  *
  * @author daw1
+ * 
  */
 public class UsuarioBD implements UsuarioDAO{
 
@@ -122,8 +123,6 @@ public class UsuarioBD implements UsuarioDAO{
         return u;
     }
    
-    public static void main(String[] args) {
-       
-    }
+   
     
 }

@@ -122,12 +122,19 @@ public class Service {
         categoriaDAO.modificarCategoria(c);
     }
     
+    public List<Pedido> getPedidos(){
+        return pedidoDAO.getPedidos();
+    }
+    public Pedido getPedido(int idPedido){
+        return pedidoDAO.getPedido(idPedido);
+    }
+    
     public boolean nuevoPedido(Pedido p){
         List<Pedido> pedidos = pedidoDAO.getPedidos();
         int i;
         for(i=0; i<pedidos.size() && 
-            p.getIdPedido()==
-                pedidos.get(i).getIdPedido();i++);
+            p.getIdPedido()!=(
+                pedidos.get(i).getIdPedido());i++);
         if (i==pedidos.size()){
             pedidoDAO.nuevoPedido(p);
             return true;
@@ -135,7 +142,10 @@ public class Service {
             return false;
         }
     }
-    
+    public List<Pedido> getProductoPedido(int idProducto){
+        return pedidoDAO.getProductoPedido(idProducto);
+        
+    }
     
     public Usuario login(String nombre, String password){
         Usuario u = null;

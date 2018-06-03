@@ -74,10 +74,6 @@ public class ProductoBD implements ProductoDAO{
             pst.setInt(3, p.getIdUsuario());
             pst.setString(4, p.getNombre());
             pst.setInt(5,p.getEstado());
-            
-            /*String salto = SHA.getSalt();
-            String hash = SHA.getSHA(password, salto);
-            */
             pst.setString(6, p.getDescripcion());
             pst.setDate(7, (Date) p.getFecha());
             pst.setDouble(8,p.getPrecio());

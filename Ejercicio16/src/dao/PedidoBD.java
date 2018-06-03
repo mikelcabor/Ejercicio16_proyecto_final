@@ -5,6 +5,7 @@
  */
 package dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,12 +66,13 @@ public class PedidoBD implements PedidoDAO{
     public void nuevoPedido(Pedido p) {
         PreparedStatement pst;
         try {
-            pst = Conexion.getConexion().prepareStatement("Insert into Categortias_16(idPedido,idUsuario,idFechapedido,importeTotal) "
-                    + "values (?,?,?,?)");
+            pst = Conexion.getConexion().prepareStatement("Insert into Pedidos_16(idPedido,idUsuario,idProducto,fechapedido,importeTotal) "
+                    + "values (?,?,?,?,?)");
             pst.setInt(1, p.getIdPedido());
-            pst.setInt(2,p.getIdUsuario());        
-            pst.setString(3,p.getIdFechapedido());
-            pst.setDouble(4,p.getImporteTotal());     
+            pst.setInt(2,p.getIdUsuario());  
+            pst.setInt(3,p.getIdProducto()); 
+            pst.setDate(4, new java.sql.Date(p.getIdFechapedido().getTime()));
+            pst.setDouble(5,p.getImporteTotal());     
             pst.executeUpdate();
             pst.close();            
         } catch (SQLException ex) {
@@ -91,15 +93,38 @@ public class PedidoBD implements PedidoDAO{
     private Pedido leerPedido(ResultSet rst) {
         Pedido c = new Pedido();
         try {
-             c.setIdPedido(rst.getInt("idCategoria"));
-             c.setIdPedido(rst.getInt("idPedido"));             
-             c.setIdFechapedido(rst.getString("fechaPedido"));
+             c.setIdPedido(rst.getInt("idPedido"));
+             c.setIdUsuario(rst.getInt("idUsuario")); 
+             c.setIdProducto(rst.getInt("idProducto")); 
+             c.setIdFechapedido(rst.getDate("fechaPedido"));
              c.setImporteTotal(rst.getInt("importeTotal"));
             
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return c;
+    }
+
+    @Override
+    public List<Pedido> getProductoPedido(int idProducto) {
+        List<Pedido> pedidos = new ArrayList<>();
+        PreparedStatement pst;
+        ResultSet rst;
+        
+        try {
+            pst = Conexion.getConexion().prepareStatement("SELECT * FROM Pedidos_16 where idProducto=?");
+            pst.setInt(1, idProducto);
+            rst = pst.executeQuery();
+            if(rst.next()){
+                Pedido p = leerPedido(rst);
+                pedidos.add(p);
+            }
+            pst.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductoBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*No hasta que punto esto esta bien !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+        return  pedidos;
     }
     
 }

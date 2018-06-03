@@ -6,19 +6,22 @@
 package views;
 
 import java.awt.Component;
+import java.util.Date;
 import java.util.List;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import jiconfont.icons.FontAwesome;
-import jiconfont.swing.IconFontSwing;
 import modelo.Categoria;
 import modelo.Pedido;
 import modelo.Producto;
@@ -33,7 +36,9 @@ public class VerProductosCategoria extends javax.swing.JFrame {
     private Usuario usuario;
     private Categoria categoria;
     private Service services = new Service();
-     private DefaultMutableTreeNode trRaiz;
+    private Object[][] datos;
+    private DefaultMutableTreeNode trRaiz;
+     
     /**
      * Creates new form VerProductosCategoria
      */
@@ -112,6 +117,10 @@ public class VerProductosCategoria extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(tblProductos);
+        if (tblProductos.getColumnModel().getColumnCount() > 0) {
+            tblProductos.getColumnModel().getColumn(5).setPreferredWidth(100);
+        }
+        tblProductos.getAccessibleContext().setAccessibleName("Productos categorias");
 
         pnlTabla.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
@@ -169,21 +178,36 @@ public class VerProductosCategoria extends javax.swing.JFrame {
     
     private void comprarProducto(){
         
-           /* Pedido e = new Producto();   
-            e.setIdPedido(services.getProductos().size()+1);
-            e.setIdUsuario(tblProductos.getColumn(0).get);
-            e.setIdUsuario(usuario.getIdUsuario());
-            e.setNombre(txtNombre.getText());
-            //e.setIdCategoria(txtCategoria.get);
-            e.setDescripcion(txtDescripcion.getText());            
-            e.setEstado(slEstado.getValue());
-            e.setFecha(lblFecha.getText());            
-            e.setPrecio(Double.valueOf(String.valueOf(txtPrecio.getValue())));
-            e.setFoto(String.valueOf(lblImagen.getIcon()));
-            services.nuevoProducto(e);
-            JOptionPane.showMessageDialog(this, "Evento guardado correctamente");
-            */
+           Pedido e = new Pedido();   
+            int[] seleccionada = tblProductos.getSelectedRows();
+                if (seleccionada.length == 0){
+                    JOptionPane.showMessageDialog(this, "Debe seleccionar un producto!", "Error", JOptionPane.ERROR_MESSAGE);
+             } else {
+                
+                for(int i=0; i<seleccionada.length; i++){
+                    java.util.Date fecha = new Date();
+                    int max = 0;
+                    for(Pedido p : services.getPedidos()){                
+                        if(max<p.getIdPedido())
+                                {                            
+                                    max=p.getIdPedido();
+                                }
+                    }
+                    e.setIdPedido(max+1);
+                    Producto producto = (Producto) datos[seleccionada[i]][0];
+                    e.setIdUsuario(usuario.getIdUsuario());
+                    e.setIdProducto(producto.getIdProducto());
+                    e.setIdFechapedido((Date)fecha);
+                    e.setImporteTotal(producto.getPrecio());                    
+                    services.nuevoPedido(e);
+                    JOptionPane.showMessageDialog(this, "Pedido guardado correctamente");
+            }
+                                               
+            
+            
+           
         
+    }
     }
     
     private void crearArbolCategorias() {
@@ -201,18 +225,58 @@ public class VerProductosCategoria extends javax.swing.JFrame {
      private void cargarProductosCategoria(Categoria c) {
         String[] titulos = {"Nombre", "Vendedor","Precio","Estado","Fecha","Foto"};
         List<Producto> productos = services.getProductoCategoria(c.getIdCategoria());
-        Object[][] datos = new Object[productos.size()][6] ;
+        datos = new Object[productos.size()][6];
         for(int i=0; i<productos.size(); i++){
             datos[i][0] = productos.get(i);
-            datos[i][1] = String.valueOf(productos.get(i).getIdUsuario());
-            datos[i][2] = String.valueOf(productos.get(i).getPrecio());
+            datos[i][1] = String.valueOf(services.getUsuario(productos.get(i).getIdUsuario()));
+            datos[i][2] = String.valueOf(productos.get(i).getPrecio() + "€");
             datos[i][3] = String.valueOf(productos.get(i).getEstado());
             datos[i][4] = String.valueOf(productos.get(i).getFecha());
             datos[i][5] = String.valueOf(productos.get(i).getFoto());
         }
         DefaultTableModel modelo = new DefaultTableModel(datos, titulos);
         tblProductos.setModel(modelo);
+        tblProductos.getColumnModel().getColumn(5)
+                .setCellRenderer(new TableCellRenderer() {
+                    @Override
+                    public Component getTableCellRendererComponent(
+                            JTable table,
+                            Object value,
+                            boolean isSelected,
+                            boolean hasFocus,
+                            int row,
+                            int column) {
+                        String pr = (String) value;
+                        int i;
+                        for (i = 0; i < productos.size()
+                                && !pr.equalsIgnoreCase(productos.get(i).getFoto());
+                                i++);
+                        
+                        return new JLabel(
+                                new ImageIcon("images/" + productos.get(i).getFoto()));
+                        
+                                
+                    }
+                });
+                tblProductos.getColumnModel().getColumn(3)
+                        .setCellRenderer(new TableCellRenderer() {
+                            @Override
+                            public Component getTableCellRendererComponent(
+                                    JTable table,
+                                    Object value,
+                                    boolean isSelected,
+                                    boolean hasFocus,
+                                    int row,
+                                    int column) {
+                                JSlider js = new JSlider(1,5, Integer.parseInt(String.valueOf(value)));
+                                return js;                                
+
+                            }
+                        });
+               
     }
+     
+     
     /**
      * @param args the command line arguments
      */

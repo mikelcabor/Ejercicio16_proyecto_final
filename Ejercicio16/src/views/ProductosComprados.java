@@ -5,18 +5,33 @@
  */
 package views;
 
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import modelo.Categoria;
+import modelo.Pedido;
+import modelo.Producto;
+import modelo.Usuario;
+import service.Service;
+
 /**
  *
  * @author daw1
  */
-public class Productoscomprados extends javax.swing.JFrame {
-
+public class ProductosComprados extends javax.swing.JFrame {
+    private Usuario usuario;   
+    private Service services = new Service();
+    private Object[][] datos;
     /**
      * Creates new form Productoscomprados
      */
-    public Productoscomprados() {
+    public ProductosComprados(Usuario usuario) {
+        this.usuario = usuario;
         initComponents();
+        cargarProductosPedidos(services.getPedido(usuario.getIdUsuario()));
+        
     }
+
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,7 +45,7 @@ public class Productoscomprados extends javax.swing.JFrame {
         pnlContenido = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblProductosPedidos = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jcxLimpieza = new javax.swing.JCheckBox();
         jcxRopa = new javax.swing.JCheckBox();
@@ -49,18 +64,26 @@ public class Productoscomprados extends javax.swing.JFrame {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblProductosPedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "Title 4", "null", "null"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblProductosPedidos);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -108,7 +131,10 @@ public class Productoscomprados extends javax.swing.JFrame {
 
         getContentPane().add(pnlBotones, java.awt.BorderLayout.PAGE_END);
 
-        pack();
+        getAccessibleContext().setAccessibleName("Productos comprados");
+
+        setSize(new java.awt.Dimension(548, 339));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jcxLimpiezaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcxLimpiezaActionPerformed
@@ -122,36 +148,29 @@ public class Productoscomprados extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Productoscomprados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Productoscomprados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Productoscomprados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Productoscomprados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    
+    
+    private void cargarProductosPedidos(Pedido p) {
+        String[] titulos = {"Nombre", "Vendedor","Precio","Estado","Fecha","Foto"};
+        List<Pedido> pedidos = services.getProductoPedido(p.getIdProducto());
+        List<Producto> productos = services.getProductos();
+        datos = new String[pedidos.size()][6] ;   
+   
+        for(int i=0; i<pedidos.size(); i++){
+           for(Pedido e : services.getPedidos()){   
+             if(e.getIdUsuario()==usuario.getIdUsuario()){               
+                Producto h = productos.get(pedidos.get(i).getIdProducto());
+                datos[i][0] = h.getNombre();
+                datos[i][1] = usuario.getNombre();
+                datos[i][2] = String.valueOf(h.getPrecio());
+                datos[i][3] = String.valueOf(h.getEstado());
+                datos[i][4] = String.valueOf(h.getFecha());
+                datos[i][5] = String.valueOf(h.getFoto());                
+             }
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Productoscomprados().setVisible(true);
-            }
-        });
+    }
+        DefaultTableModel modelo = new DefaultTableModel((Object[][]) datos, titulos);
+        tblProductosPedidos.setModel(modelo);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -161,7 +180,6 @@ public class Productoscomprados extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JCheckBox jcxAlimentos;
     private javax.swing.JCheckBox jcxHerramientas;
     private javax.swing.JCheckBox jcxLimpieza;
@@ -170,5 +188,6 @@ public class Productoscomprados extends javax.swing.JFrame {
     private javax.swing.JPanel pnlBotones;
     private javax.swing.JPanel pnlContenido;
     private javax.swing.JPanel pnlTitulo;
+    private javax.swing.JTable tblProductosPedidos;
     // End of variables declaration//GEN-END:variables
 }
